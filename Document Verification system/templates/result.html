@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Result - Document Verification System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <header class="animate__animated animate__slideInDown">
+        <div class="container">
+            <h1>📄 Document Verification System</h1>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+        </div>
+    </header>
+    
+    <div class="container animate__animated animate__fadeIn">
+        <div class="result">
+            <h2 class="animate__animated animate__bounceIn">📊 Analysis Result</h2>
+            
+            <div class="result-stats animate__animated animate__fadeInUp">
+                <div class="stat">
+                    <h3>🔴 Anomalies Detected</h3>
+                    <p class="stat-number">{{ red_count }}</p>
+                </div>
+                <div class="stat">
+                    <h3>🎯 Confidence</h3>
+                    <p class="stat-number">{{ confidence }}%</p>
+                </div>
+                <div class="stat">
+                    <h3>Verdict</h3>
+                    <p class="stat-verdict 
+                        {% if result == 'REAL' %}real
+                        {% elif result == 'SUSPICIOUS' %}suspicious
+                        {% else %}fake{% endif %}">
+                        {{ result }}
+                    </p>
+                </div>
+            </div>
+            
+            {% if red_count > 0 %}
+            <div class="images animate__animated animate__fadeInUp">
+                <div class="image-container">
+                    <h3>Uploaded Document</h3>
+                    <img src="{{ url_for('uploaded_file', filename=original) }}" alt="Original Document" class="document-image">
+                </div>
+                <div class="image-container">
+                    <h3>Detected Tampering</h3>
+                    <img src="{{ url_for('uploaded_file', filename=marked) }}" alt="Marked Document" class="document-image">
+                </div>
+            </div>
+            {% else %}
+            <div class="images animate__animated animate__fadeInUp">
+                <div class="image-container">
+                    <h3>Uploaded Document</h3>
+                    <img src="{{ url_for('uploaded_file', filename=original) }}" alt="Original Document" class="document-image">
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="result-message animate__animated animate__fadeInUp">
+                {% if result == 'REAL' %}
+                <div class="alert alert-success">
+                    <h4>🟢 REAL — No strong tampering detected</h4>
+                    <p>This document appears authentic based on visual analysis.</p>
+                </div>
+                {% elif result == 'SUSPICIOUS' %}
+                <div class="alert alert-warning">
+                    <h4>🟡 SUSPICIOUS — Minor irregularities found</h4>
+                    <p>Some anomalies detected. Manual verification recommended.</p>
+                </div>
+                {% else %}
+                <div class="alert alert-danger">
+                    <h4>🔴 FAKE — Clear visual manipulation detected</h4>
+                    <p>Significant tampering indicators found. This document is likely forged.</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="note animate__animated animate__fadeInUp">
+                <p><strong>Note:</strong> This tool gives a quick visual check. For final legal or official use, please follow up with a document expert.</p>
+            </div>
+            
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary animate__animated animate__pulse">Analyze Another Document</a>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Document Verification System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <header class="animate__animated animate__slideInDown">
+        <div class="container">
+            <h1>📄 Document Verification System</h1>
+            <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+        </div>
+    </header>
+    
+    <div class="container animate__animated animate__fadeIn">
+        <div class="dashboard">
+            <h2 class="animate__animated animate__bounceIn">Ready to verify a document?</h2>
+            <p class="animate__animated animate__fadeInUp">Upload a PDF or image, and our system will analyze it for visual tampering. We keep the process simple and easy to understand.</p>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} animate__animated animate__shakeX">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}" class="upload-form animate__animated animate__fadeInUp">
+                <div class="form-group">
+                    <label for="file">Select Document</label>
+                    <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png,.pdf" required>
+                </div>
+                <button type="submit" class="btn btn-primary animate__animated animate__pulse">Verify Document</button>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
